@@ -3,12 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Row } from "reactstrap";
 import CustomForm from "../../components/Custome/CustomForm";
 import useHttp from "../../components/Hook/Use-http";
-import CONSTANT, { authtoken } from "../Utility/constnt";
+import CONSTANT, { authToken } from "../Utility/constnt";
+import notify from "../Utility/coustemFunction";
 
 const TripForm = () => {
-  const [actionData, setActionData] = useState({});
   const [flag, setFlag] = useState(true);
-  const [isEdit, setIsEdit] = useState(false);
   const [plantData, setPlantData] = useState([]);
   const [driverData, setDriverData] = useState([]);
   const [vehiclesData, setVehiclesData] = useState([]);
@@ -51,61 +50,26 @@ const TripForm = () => {
   };
 
   const onDriverChange = (DriverID) => {
-    (async () => {
-      try {
-        if (authtoken.token == "") {
-          // const response = await fetch(
-          //   "https://api.allorigins.win/raw?url=https://india-agw.telenity.com/oauth/token?grant_type=client_credentials",
-          //   {
-          //     method: "POST", // *GET, POST, PUT, DELETE, etc.
-          //     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-          //     credentials: "same-origin", // include, *same-origin, omit
-          //     headers: {
-          //       Authorization: `Basic c21hcnR0cmFpbGNsb3VkOnNtYXJ0dHJhaWxjbG91ZA==`,
-          //     },
-          //     redirect: "follow", // manual, *follow, error
-          //     referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-          //     body: JSON.stringify({}), // body data type must match "Content-Type" header
-          //   }
-          // );
-          // console.log(response.json());
-        }
-
-        const Services = axios.create({
-          baseURL:
-            "https://api.allorigins.win/raw?url=https://india-agw.telenity.com",
-          headers: {
-            Accept: "*/*",
-            "Content-Type": "application/x-www-form-urlencoded",
-            Host: "india-agw.telenity.com",
-            Authorization: `Basic c21hcnR0cmFpbGNsb3VkOnNtYXJ0dHJhaWxjbG91ZA==`,
-          },
-        });
-        const res = await Services.post(
-          "/oauth/token?grant_type=client_credentials",
-          {}
-        );
-        console.log(res);
-        // } else {
-        // }
-        // const Services = axios.create({
-        //   baseURL: "https://india-agw.telenity.com",
-        //   headers: {
-        //     Accept: "application/json",
-        //     Authorization: `Bearer ${localStorage.getItem("authUser")}`,
-        //   },
-        // });
-        // await Services.get(
-        //   "/apigw/NOFBconsent/v1/NOFBconsent?address=tel:+91" + DriverID?.mobile
-        // );
-      } catch (error) {
-        console.log(error?.response);
-        if (error?.response?.status === 404) {
-          console.log("res");
-        }
-      }
-    })();
+    const URL = {
+      endpoint: `/location/consentApi/${DriverID?.mobile}`,
+      type: "GET",
+    }
+    API_CALL.sendRequest(URL, consentDataHandler);
   };
+
+  const consentDataHandler = (res) => {
+    console.log(res)
+    if (res?.data?.Consent?.status === 'PENDING') {
+      notify.warning(res?.data?.Consent?.status)
+    }
+    else if (res?.data?.Consent?.status === 'ALLOWED') {
+      notify.success(res?.data?.Consent?.status)
+    }
+    else {
+      notify.error('Get Not Status')
+    }
+
+  }
 
   return (
     <React.Fragment>
@@ -147,7 +111,7 @@ const TripForm = () => {
               }),
             }}
             onChangeFunction={{ driverId: onDriverChange }}
-            // isEdit={isEdit}
+          // isEdit={isEdit}
           />
         </Row>
       </div>

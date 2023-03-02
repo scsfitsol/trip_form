@@ -42,6 +42,7 @@ const useHttp = () => {
           console.log(e);
         }
       } catch (err) {
+        console.log('err?.response?.data', err?.response)
         if (err?.response?.data?.message) {
           notify.error(err?.response?.data?.message);
           if (errorHandler) {

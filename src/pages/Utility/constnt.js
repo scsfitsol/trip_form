@@ -1569,7 +1569,7 @@ export const getTableData = (dataKey, data) => {
   };
 };
 
-export const authtoken = {
+export const authToken = {
   token: "",
 };
 

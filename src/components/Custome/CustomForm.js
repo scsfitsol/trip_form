@@ -14,7 +14,10 @@ const CustomForm = (props) => {
     onChangeFunction = {},
     option = {},
   } = props;
-  const [inputData, setInputData] = useState({});
+  const todayDate = moment(new Date()).format(
+    "YYYY-MM-DDTHH:MM"
+  );
+  const [inputData, setInputData] = useState({ startDateAndTime: todayDate, targetedDateAndTime: todayDate });
   const [selectedValue, setSelectedValue] = useState({});
   const [isChange, setIsChange] = useState(false);
   const [flag, setFlag] = useState(false);
@@ -71,11 +74,6 @@ const CustomForm = (props) => {
           <form
             className="needs-validation"
             onSubmit={onSubmitForm}
-            // style={{
-            //   maxHeight: "550px",
-            //   overflowY: "scroll",
-            //   overflowX: "hidden",
-            // }}
           >
             <Row>
               <Col md="12">
@@ -129,9 +127,9 @@ const CustomForm = (props) => {
                             value={
                               isEdit
                                 ? !isChange
-                                  ? fieldName?.options.filter(
-                                      (e) => e.value === OldValue
-                                    )
+                                  ? option[fieldName?.name] || fieldName?.options.filter(
+                                    (e) => e.value === OldValue
+                                  )
                                   : selectedValue[fieldName?.name]
                                 : selectedValue[fieldName?.name]
                             }
@@ -139,8 +137,8 @@ const CustomForm = (props) => {
                               fieldName?.options
                                 ? fieldName?.options
                                 : option[fieldName?.name]
-                                ? option[fieldName?.name]
-                                : []
+                                  ? option[fieldName?.name]
+                                  : []
                             }
                             selected={"clientName" == fieldName?.name}
                             classNamePrefix="select2-selection"
@@ -182,9 +180,7 @@ const CustomForm = (props) => {
                         </div>
                       );
                     } else if (fieldName.type === "selectDate&Time") {
-                      const todayDate = moment(new Date()).format(
-                        "YYYY-MM-DDTHH:MM"
-                      );
+
                       return (
                         <div key={index} className="mb-4">
                           <Label>{fieldName?.label}</Label>
@@ -204,7 +200,7 @@ const CustomForm = (props) => {
                           <Label>{fieldName?.label}</Label>
                           <br />
                           <GooglePlacesAutocomplete
-                            apiKey={"AIzaSyAIh5rjUYY8SoLb14LUnxrbhD2XnRsF_78"}
+                            apiKey={process.env.REACT_APP_MAP_KEY}
                             apiOptions={{
                               types: ["(cities)"],
                               componentRestrictions: { country: "IN" },

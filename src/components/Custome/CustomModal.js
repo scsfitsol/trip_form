@@ -17,10 +17,13 @@ const CustomModal = (props) => {
     formData,
     isEdit,
   } = props;
-  const [inputData, setInputData] = useState({});
+  const todayDate = moment(new Date()).format(
+    "YYYY-MM-DDTHH:MM"
+  );
+  const [inputData, setInputData] = useState({ startDateAndTime: todayDate, targetedDateAndTime: todayDate });
   const [selectedValue, setSelectedValue] = useState({});
   const [isChange, setIsChange] = useState(false);
-  
+
   const onChangeInput = (e) => {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
   };
@@ -133,7 +136,7 @@ const CustomModal = (props) => {
                                 value={
                                   isEdit
                                     ? !isChange
-                                      ? fieldName?.options.filter(
+                                      ? option[fieldName?.name] || fieldName?.options.filter(
                                         (e) => e.value === OldValue
                                       )
                                       : selectedValue[fieldName?.name]
