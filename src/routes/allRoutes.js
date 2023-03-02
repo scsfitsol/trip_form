@@ -26,7 +26,7 @@ import TripForm from "../pages/TripForm";
 
 const userRoutes = [
   // Analytics
-  { path: "/trip-form", component: TripForm },
+  { path: "/tripForm", component: TripForm },
   { path: "/*", exact: true, component: Pages404 },
 ];
 

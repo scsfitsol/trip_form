@@ -251,7 +251,7 @@ const CONSTANT = {
         {
           id: 1,
           className: "waves-effect",
-          to: "/trip-form",
+          to: "/tripForm",
           lable: "Trip Form",
           icon: "bx bxs-report",
         },

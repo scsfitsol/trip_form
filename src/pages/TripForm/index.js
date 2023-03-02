@@ -1,9 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Row } from "reactstrap";
 import CustomForm from "../../components/Custome/CustomForm";
 import useHttp from "../../components/Hook/Use-http";
-import CONSTANT, { authToken } from "../Utility/constnt";
+import CONSTANT from "../Utility/constnt";
 import notify from "../Utility/coustemFunction";
 
 const TripForm = () => {
@@ -58,15 +57,11 @@ const TripForm = () => {
   };
 
   const consentDataHandler = (res) => {
-    console.log(res)
-    if (res?.data?.Consent?.status === 'PENDING') {
-      notify.warning(res?.data?.Consent?.status)
-    }
-    else if (res?.data?.Consent?.status === 'ALLOWED') {
+    if (res?.data?.Consent?.status === 'ALLOWED') {
       notify.success(res?.data?.Consent?.status)
     }
     else {
-      notify.error('Get Not Status')
+      notify.error('Driver Not Verified')
     }
 
   }
