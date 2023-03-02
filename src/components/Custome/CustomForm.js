@@ -5,12 +5,19 @@ import moment from "moment";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 
 const CustomForm = (props) => {
-  const { data, onSubmit, defaultData, formData, isEdit } = props;
+  const {
+    data,
+    onSubmit,
+    defaultData,
+    formData,
+    isEdit,
+    onChangeFunction = {},
+    option = {},
+  } = props;
   const [inputData, setInputData] = useState({});
   const [selectedValue, setSelectedValue] = useState({});
   const [isChange, setIsChange] = useState(false);
-  const [flag, setFlag] = useState(false)
-
+  const [flag, setFlag] = useState(false);
 
   const onChangeInput = (e) => {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
@@ -36,38 +43,48 @@ const CustomForm = (props) => {
     } else {
       onSubmit(inputData);
     }
-    setFlag(!flag)
+    setFlag(!flag);
     setInputData({});
     setIsChange(false);
     setSelectedValue({});
   };
   const onChangeGoogleAddress = (e, fieldName) => {
-    if (fieldName === 'sourceLocation') {
-      setInputData({ ...inputData, sourceLocation: e?.label, sourceId: e?.value?.place_id })
+    if (fieldName === "sourceLocation") {
+      setInputData({
+        ...inputData,
+        sourceLocation: e?.label,
+        sourceId: e?.value?.place_id,
+      });
+    } else {
+      setInputData({
+        ...inputData,
+        destinationLocation: e?.label,
+        destinationId: e?.value?.place_id,
+      });
     }
-    else {
-      setInputData({ ...inputData, destinationLocation: e?.label, destinationId: e?.value?.place_id })
-    }
-  }
+  };
 
   return (
     <>
-      <Card style={{ zIndex: '99' }}>
+      <Card style={{ zIndex: "99" }}>
         <CardBody className="p-1 m-1">
           <form
             className="needs-validation"
             onSubmit={onSubmitForm}
-          // style={{
-          //   maxHeight: "550px",
-          //   overflowY: "scroll",
-          //   overflowX: "hidden",
-          // }}
+            // style={{
+            //   maxHeight: "550px",
+            //   overflowY: "scroll",
+            //   overflowX: "hidden",
+            // }}
           >
             <Row>
               <Col md="12">
                 <div className="mb-3 pe-2">
                   {data.map((fieldName, index) => {
-                    if (fieldName.type === "text" || fieldName.type === "number") {
+                    if (
+                      fieldName.type === "text" ||
+                      fieldName.type === "number"
+                    ) {
                       return (
                         <div key={index} className="mb-4">
                           <Label htmlFor="validationCustom01">
@@ -84,7 +101,9 @@ const CustomForm = (props) => {
                             placeholder={fieldName?.placeholder}
                             type={fieldName?.type ? fieldName?.type : "text"}
                             errorMessage={
-                              fieldName?.errorMessage ? fieldName?.errorMessage : ""
+                              fieldName?.errorMessage
+                                ? fieldName?.errorMessage
+                                : ""
                             }
                             className="form-control"
                             validate={{
@@ -100,7 +119,9 @@ const CustomForm = (props) => {
                         </div>
                       );
                     } else if (fieldName.type === "SingleSelect") {
-                      const OldValue = isEdit ? defaultData[fieldName?.name] : null;
+                      const OldValue = isEdit
+                        ? defaultData[fieldName?.name]
+                        : null;
                       return (
                         <div key={index} className="mb-4">
                           <Label>{fieldName?.label}</Label>
@@ -109,17 +130,26 @@ const CustomForm = (props) => {
                               isEdit
                                 ? !isChange
                                   ? fieldName?.options.filter(
-                                    (e) => e.value === OldValue
-                                  )
+                                      (e) => e.value === OldValue
+                                    )
                                   : selectedValue[fieldName?.name]
                                 : selectedValue[fieldName?.name]
                             }
-                            options={fieldName?.options}
+                            options={
+                              fieldName?.options
+                                ? fieldName?.options
+                                : option[fieldName?.name]
+                                ? option[fieldName?.name]
+                                : []
+                            }
                             selected={"clientName" == fieldName?.name}
                             classNamePrefix="select2-selection"
-                            onChange={(selected) =>
-                              onSelectValue(selected, fieldName?.name)
-                            }
+                            onChange={(selected) => {
+                              onSelectValue(selected, fieldName?.name);
+                              if (onChangeFunction[fieldName?.name]) {
+                                onChangeFunction[fieldName?.name](selected);
+                              }
+                            }}
                           />
                         </div>
                       );
@@ -152,7 +182,9 @@ const CustomForm = (props) => {
                         </div>
                       );
                     } else if (fieldName.type === "selectDate&Time") {
-                      const todayDate = moment(new Date()).format('YYYY-MM-DDTHH:MM')
+                      const todayDate = moment(new Date()).format(
+                        "YYYY-MM-DDTHH:MM"
+                      );
                       return (
                         <div key={index} className="mb-4">
                           <Label>{fieldName?.label}</Label>
@@ -169,17 +201,18 @@ const CustomForm = (props) => {
                     } else if (fieldName.type === "GoogleAutoComplete") {
                       return (
                         <div key={index} className="mb-4">
-                          <Label>{fieldName?.label}</Label><br />
+                          <Label>{fieldName?.label}</Label>
+                          <br />
                           <GooglePlacesAutocomplete
-
-                            apiKey={'AIzaSyAIh5rjUYY8SoLb14LUnxrbhD2XnRsF_78'}
+                            apiKey={"AIzaSyAIh5rjUYY8SoLb14LUnxrbhD2XnRsF_78"}
                             apiOptions={{
-                              types: ['(cities)'],
+                              types: ["(cities)"],
                               componentRestrictions: { country: "IN" },
                             }}
                             selectProps={{
                               placeholder: fieldName.placeholder,
-                              onChange: (e) => onChangeGoogleAddress(e, fieldName?.name)
+                              onChange: (e) =>
+                                onChangeGoogleAddress(e, fieldName?.name),
                             }}
                           />
                         </div>

@@ -97,5 +97,6 @@
   },
   "devDependencies": {
     "sass": "^1.57.1"
-  }
+  },
+  "proxy": "https://dev.fitsolscs.com"
 }

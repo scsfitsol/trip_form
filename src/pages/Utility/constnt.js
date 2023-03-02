@@ -1010,6 +1010,24 @@ const CONSTANT = {
         type: "text",
         required: false,
       },
+      {
+        name: "vehicleId",
+        label: "Vehicle Name",
+        placeholder: "Vehicle Name",
+        type: "SingleSelect",
+      },
+      {
+        name: "plantId",
+        label: "Plant Name",
+        placeholder: "Plant Name",
+        type: "SingleSelect",
+      },
+      {
+        name: "driverId",
+        label: "Driver Name",
+        placeholder: "Driver Name",
+        type: "SingleSelect",
+      },
     ],
     TRIP_STATUS: [
       {
@@ -1549,6 +1567,10 @@ export const getTableData = (dataKey, data) => {
     columns: CONSTANT.DATA_TABLE_COLUME[dataKey],
     rows: data || STATIC_DATA[dataKey],
   };
+};
+
+export const authtoken = {
+  token: "",
 };
 
 export default CONSTANT;
