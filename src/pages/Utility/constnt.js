@@ -1028,6 +1028,18 @@ const CONSTANT = {
         placeholder: "Driver Name",
         type: "SingleSelect",
       },
+      {
+        name: "fleetCharges",
+        label: "Fleet Charges",
+        placeholder: "Fleet Name",
+        type: "text",
+      },
+      {
+        name: "gstCharges",
+        label: "GST Charges",
+        placeholder: "GST Charges",
+        type: "text",
+      },
     ],
     TRIP_STATUS: [
       {
