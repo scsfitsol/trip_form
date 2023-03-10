@@ -32,12 +32,20 @@ const TripForm = () => {
 
   const onSubmitForm = (payload) => {
     (async () => {
+      if (!parseInt(payload?.vehicleId)) {
+        payload.vehicleRegistrationNumber = payload?.vehicleId
+        payload.vehicleId = null
+      }
+      else {
+        payload.vehicleId = payload?.vehicleId
+      }
       const ClientData = plantData.filter((e) => e.id === payload?.plantId);
       const TransporterData = vehiclesData.filter(
         (e) => e.id === payload?.vehicleId
       );
       payload.clientId = ClientData[0]?.client?.id;
       payload.transporterId = TransporterData[0]?.transporter?.id;
+      payload.status = 2;
       console.log("payload", payload);
       API_CALL.sendRequest(
         CONSTANT.API.addTrip,

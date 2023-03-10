@@ -3,6 +3,7 @@ import { Col, Label, Row, Input, Card, CardBody } from "reactstrap";
 import Select from "react-select";
 import moment from "moment";
 import GooglePlacesAutocomplete from "react-google-places-autocomplete";
+import CreatableSelect from 'react-select/creatable';
 
 const CustomForm = (props) => {
   const {
@@ -124,6 +125,41 @@ const CustomForm = (props) => {
                         <div key={index} className="mb-4">
                           <Label>{fieldName?.label}</Label>
                           <Select
+                            value={
+                              isEdit
+                                ? !isChange
+                                  ? option[fieldName?.name] || fieldName?.options.filter(
+                                    (e) => e.value === OldValue
+                                  )
+                                  : selectedValue[fieldName?.name]
+                                : selectedValue[fieldName?.name]
+                            }
+                            options={
+                              fieldName?.options
+                                ? fieldName?.options
+                                : option[fieldName?.name]
+                                  ? option[fieldName?.name]
+                                  : []
+                            }
+                            selected={"clientName" == fieldName?.name}
+                            classNamePrefix="select2-selection"
+                            onChange={(selected) => {
+                              onSelectValue(selected, fieldName?.name);
+                              if (onChangeFunction[fieldName?.name]) {
+                                onChangeFunction[fieldName?.name](selected);
+                              }
+                            }}
+                          />
+                        </div>
+                      );
+                    } else if (fieldName.type === "SingleSelectWithCreate") {
+                      const OldValue = isEdit
+                        ? defaultData[fieldName?.name]
+                        : null;
+                      return (
+                        <div key={index} className="mb-4">
+                          <Label>{fieldName?.label}</Label>
+                          <CreatableSelect
                             value={
                               isEdit
                                 ? !isChange
